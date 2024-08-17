@@ -77,6 +77,51 @@ export default function ExerciseLibrary() {
 		fetchExercises(selectedMuscle, nextPage);
 	};
 
+	const ExerciseCard = ({ exercise }: { exercise: Exercise }) => {
+		const [showAllInstructions, setShowAllInstructions] = useState(false);
+
+		const toggleInstructions = () => {
+			setShowAllInstructions(!showAllInstructions);
+		};
+
+		return (
+			<Card key={exercise.id}>
+				<CardContent className='p-4'>
+					<h3 className='font-bold text-lg mb-2'>{exercise.name}</h3>
+					<Image
+						src={exercise.gifUrl}
+						alt={exercise.name}
+						width={300}
+						height={200}
+						unoptimized
+						className='w-full h-48 object-cover mb-2'
+					/>
+					<p className='font-semibold mb-1'>Equipment: {exercise.equipment}</p>
+					<p className='font-semibold mb-1'>Instructions:</p>
+					<ul className='list-disc pl-5'>
+						{(showAllInstructions
+							? exercise.instructions
+							: exercise.instructions.slice(0, 3)
+						).map((instruction, index) => (
+							<li key={index}>{instruction}</li>
+						))}
+					</ul>
+					{exercise.instructions.length > 3 && (
+						<Button
+							onClick={toggleInstructions}
+							className='mt-2 text-sm'
+							variant='outline'
+						>
+							{showAllInstructions
+								? 'Show Less'
+								: `Show ${exercise.instructions.length - 3} More Steps`}
+						</Button>
+					)}
+				</CardContent>
+			</Card>
+		);
+	};
+
 	return (
 		<>
 			<h1 className='text-3xl font-bold mb-4'>Exercise Library</h1>
@@ -101,33 +146,7 @@ export default function ExerciseLibrary() {
 			{error && <p className='text-red-500 mt-2'>{error}</p>}
 			<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4'>
 				{exercises.map((exercise) => (
-					<Card key={exercise.id}>
-						<CardContent className='p-4'>
-							<h3 className='font-bold text-lg mb-2'>{exercise.name}</h3>
-							<Image
-								src={exercise.gifUrl}
-								alt={exercise.name}
-								width={300}
-								height={200}
-								unoptimized
-								className='w-full h-48 object-cover mb-2'
-							/>
-							<p className='font-semibold mb-1'>
-								Equipment: {exercise.equipment}
-							</p>
-							<p className='font-semibold mb-1'>Instructions:</p>
-							<ul className='list-disc pl-5'>
-								{exercise.instructions.slice(0, 3).map((instruction, index) => (
-									<li key={index}>{instruction}</li>
-								))}
-							</ul>
-							{exercise.instructions.length > 3 && (
-								<p className='text-sm text-gray-500 mt-1'>
-									...and {exercise.instructions.length - 3} more steps
-								</p>
-							)}
-						</CardContent>
-					</Card>
+					<ExerciseCard key={exercise.id} exercise={exercise} />
 				))}
 			</div>
 			{exercises.length > 0 && exercises.length % exercisesPerPage === 0 && (

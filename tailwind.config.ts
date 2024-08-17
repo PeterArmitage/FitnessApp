@@ -24,8 +24,6 @@ const config = {
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
-				'app-light': '#ffffff',
-				'app-dark': '#121212',
 				'app-text-light': '#000000',
 				'app-text-dark': '#ffffff',
 				primary: {
@@ -57,11 +55,6 @@ const config = {
 					foreground: 'hsl(var(--card-foreground))',
 				},
 			},
-			backgroundImage: {
-				'gradient-light':
-					'linear-gradient(to bottom, var(--tw-gradient-stops))',
-				'gradient-dark': 'linear-gradient(to bottom, var(--tw-gradient-stops))',
-			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
@@ -80,6 +73,10 @@ const config = {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
+			},
+			backgroundImage: {
+				'gradient-light': 'linear-gradient(to right, var(--tw-gradient-stops))',
+				'gradient-dark': 'linear-gradient(to right, var(--tw-gradient-stops))',
 			},
 		},
 	},

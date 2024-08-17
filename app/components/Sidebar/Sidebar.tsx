@@ -1,23 +1,27 @@
 // components/Sidebar/Sidebar.tsx
 'use client';
 
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 import { ThemeToggle } from '../ThemeToggle';
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
+import SidebarItem from './SidebarItem';
 
 const menuItems = [
-	{ icon: 'dashboard', name: 'Overview', href: '/dashboard' },
-	{ icon: 'dumbbell', name: 'Exercise Library', href: '/dashboard/exercises' },
-	{ icon: 'utensils', name: 'Food Diary', href: '/dashboard/food' },
-	{ icon: 'user', name: 'Trainer', href: '/dashboard/trainer' },
-	{ icon: 'bed', name: 'Sleep and Recovery', href: '/dashboard/sleep' },
+	{ icon: 'FaChartBar', name: 'Overview', href: '/dashboard' },
+	{
+		icon: 'FaDumbbell',
+		name: 'Exercise Library',
+		href: '/dashboard/exercises',
+	},
+	{ icon: 'FaUtensils', name: 'Food Diary', href: '/dashboard/food' },
+	{ icon: 'FaUser', name: 'Workout Log', href: '/dashboard/trainer' },
+	{ icon: 'FaBed', name: 'Sleep and Recovery', href: '/dashboard/sleep' },
+	{ icon: 'FaHistory', name: 'Logs', href: '/dashboard/logs' }, // New Logs section
 ];
 
 export default function Sidebar() {
-	const pathname = usePathname();
 	const router = useRouter();
 
 	const handleSignOut = async () => {
@@ -33,16 +37,7 @@ export default function Sidebar() {
 			</div>
 			<ul className='mt-8 flex-grow'>
 				{menuItems.map((item) => (
-					<li key={item.name} className='mb-2'>
-						<Link
-							href={item.href}
-							className={`block p-4 hover:bg-white/20 dark:hover:bg-white/10 transition-colors ${
-								pathname === item.href ? 'bg-white/30 dark:bg-white/20' : ''
-							}`}
-						>
-							{item.name}
-						</Link>
-					</li>
+					<SidebarItem key={item.name} {...item} />
 				))}
 			</ul>
 			<div className='p-4 border-t border-gray-200 dark:border-white/20'>
