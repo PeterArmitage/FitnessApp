@@ -22,40 +22,44 @@ const moodOptions = [
 
 interface SleepEntryProps {
 	onSubmit: (entry: {
-		date: Date | undefined;
-		sleepDuration: string;
+		date: Date;
+		sleepDuration: number;
 		mood: string;
 		comment: string;
 	}) => void;
 }
+
 export default function SleepEntry({ onSubmit }: SleepEntryProps) {
-	const [date, setDate] = useState<Date | undefined>(new Date());
-	const [sleepDuration, setSleepDuration] = useState('');
+	const [date, setDate] = useState<Date>(new Date());
+	const [sleepDuration, setSleepDuration] = useState<number>(0);
 	const [mood, setMood] = useState('');
 	const [comment, setComment] = useState('');
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		onSubmit({ date, sleepDuration, mood, comment });
-		// Reset form fields
-		setDate(new Date());
-		setSleepDuration('');
-		setMood('');
-		setComment('');
+		if (date) {
+			onSubmit({ date, sleepDuration, mood, comment });
+			// Reset form fields
+			setDate(new Date());
+			setSleepDuration(0);
+			setMood('');
+			setComment('');
+		}
 	};
+
 	return (
 		<form onSubmit={handleSubmit} className='space-y-4'>
 			<Calendar
 				mode='single'
 				selected={date}
-				onSelect={setDate}
+				onSelect={(newDate) => newDate && setDate(newDate)}
 				className='rounded-md border'
 			/>
 			<Input
 				type='number'
 				placeholder='Sleep duration (hours)'
 				value={sleepDuration}
-				onChange={(e) => setSleepDuration(e.target.value)}
+				onChange={(e) => setSleepDuration(Number(e.target.value))}
 			/>
 			<Select onValueChange={setMood} value={mood}>
 				<SelectTrigger>

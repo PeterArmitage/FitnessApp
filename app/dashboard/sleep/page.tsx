@@ -1,12 +1,13 @@
 // app/dashboard/sleep/page.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SleepEntry from './../../components/SleepEntry';
 import SleepLog from './../../components/SleepLog';
 import InfoCard from './../../components/Infocard';
 import { Input } from '@/components/ui/input';
-
+import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
 const infoCards = [
 	{
 		title: 'Better Sleep Habits',
@@ -23,27 +24,62 @@ const infoCards = [
 	},
 	// Add more info cards as needed
 ];
-interface SleepEntryData {
+interface SleepEntry {
 	id: string;
-	date: Date | undefined;
-	sleepDuration: string;
+	date: Date;
+	sleepDuration: number;
 	mood: string;
 	comment: string;
 }
 export default function SleepAndRecovery() {
-	const [entries, setEntries] = useState<any[]>([]);
+	const [entries, setEntries] = useState<SleepEntry[]>([]);
 	const [searchTerm, setSearchTerm] = useState('');
+	const router = useRouter();
 
-	const handleNewEntry = (entry: Omit<SleepEntryData, 'id'>) => {
-		const newEntry = { ...entry, id: Date.now().toString() };
-		setEntries([newEntry, ...entries]);
+	useEffect(() => {
+		fetchEntries();
+	}, []);
+
+	async function fetchEntries() {
+		const response = await fetch('/api/sleep-entries');
+		if (response.ok) {
+			const data = await response.json();
+			setEntries(
+				data.map((entry: SleepEntry) => ({
+					...entry,
+					date: new Date(entry.date),
+				}))
+			);
+		}
+	}
+
+	const handleNewEntry = async (entry: Omit<SleepEntry, 'id'>) => {
+		const response = await fetch('/api/sleep-entries', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(entry),
+		});
+
+		if (response.ok) {
+			fetchEntries(); // Atualiza a lista após adicionar uma nova entrada
+		}
 	};
 	const handleEdit = (id: string) => {
 		// TODO: Implement edit functionality
 	};
 
-	const handleDelete = (id: string) => {
-		setEntries(entries.filter((entry) => entry.id !== id));
+	const handleDelete = async (id: string) => {
+		const response = await fetch(`/api/sleep-entries/${id}`, {
+			method: 'DELETE',
+		});
+
+		if (response.ok) {
+			fetchEntries(); // Atualiza a lista após excluir uma entrada
+		}
+	};
+
+	const handleViewAllLogs = () => {
+		router.push('/dashboard/logs');
 	};
 
 	const filteredCards = infoCards.filter(
@@ -62,12 +98,17 @@ export default function SleepAndRecovery() {
 					<SleepEntry onSubmit={handleNewEntry} />
 				</div>
 				<div>
-					<h2 className='text-2xl font-semibold mb-4'>Sleep Log</h2>
+					<h2 className='text-2xl font-semibold mb-4'>
+						Sleep Log (Last 3 Days)
+					</h2>
 					<SleepLog
 						entries={entries}
 						onEdit={handleEdit}
 						onDelete={handleDelete}
 					/>
+					<Button onClick={handleViewAllLogs} className='mt-4'>
+						View All Logs
+					</Button>
 				</div>
 			</div>
 

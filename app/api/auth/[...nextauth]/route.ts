@@ -1,4 +1,4 @@
-import NextAuth, { NextAuthOptions } from 'next-auth';
+import NextAuth, { NextAuthOptions, DefaultSession } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
@@ -7,8 +7,20 @@ import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
+// Extend the built-in session type to include id
+declare module 'next-auth' {
+	interface Session {
+		user: {
+			id: string;
+			name?: string | null;
+			email?: string | null;
+			image?: string | null;
+		};
+	}
+}
+
 export const authOptions: NextAuthOptions = {
-	adapter: PrismaAdapter(prisma) as any,
+	adapter: PrismaAdapter(prisma),
 	providers: [
 		GoogleProvider({
 			clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -58,17 +70,71 @@ export const authOptions: NextAuthOptions = {
 		maxAge: 30 * 24 * 60 * 60, // 30 days
 	},
 	callbacks: {
-		async jwt({ token, user }) {
+		async jwt({ token, user, account }) {
+			console.log('JWT callback', { token, user, account });
 			if (user) {
 				token.id = user.id;
+			}
+			if (account) {
+				token.accessToken = account.access_token;
 			}
 			return token;
 		},
 		async session({ session, token }) {
+			console.log('Session callback', { session, token });
 			if (session.user) {
-				(session.user as any).id = token.id;
+				session.user.id = token.id as string;
 			}
 			return session;
+		},
+		async redirect({ url, baseUrl }) {
+			console.log('Redirect callback', { url, baseUrl });
+			// Always redirect to /dashboard after successful sign in
+			return `${baseUrl}/dashboard`;
+		},
+		async signIn({ user, account, profile, email, credentials }) {
+			console.log('Sign in callback', {
+				user,
+				account,
+				profile,
+				email,
+				credentials,
+			});
+
+			if (account?.provider === 'google') {
+				const existingUser = await prisma.user.findUnique({
+					where: { email: user.email! },
+				});
+
+				if (existingUser) {
+					// Check if the Google account is already linked
+					const existingAccount = await prisma.account.findFirst({
+						where: {
+							userId: existingUser.id,
+							provider: 'google',
+						},
+					});
+
+					if (!existingAccount) {
+						// Link the Google account to the existing user
+						await prisma.account.create({
+							data: {
+								userId: existingUser.id,
+								type: account.type,
+								provider: account.provider,
+								providerAccountId: account.providerAccountId,
+								access_token: account.access_token,
+								expires_at: account.expires_at,
+								token_type: account.token_type,
+								scope: account.scope,
+								id_token: account.id_token,
+							},
+						});
+					}
+					return true;
+				}
+			}
+			return true;
 		},
 	},
 	pages: {

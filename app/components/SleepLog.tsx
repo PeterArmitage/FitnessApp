@@ -1,4 +1,3 @@
-// components/SleepLog.tsx
 import {
 	Table,
 	TableBody,
@@ -11,7 +10,7 @@ import { Button } from '@/components/ui/button';
 
 interface SleepEntry {
 	id: string;
-	date: Date;
+	date: string | Date; // Alterado para aceitar string ou Date
 	sleepDuration: number;
 	mood: string;
 	comment: string;
@@ -21,9 +20,25 @@ interface SleepLogProps {
 	entries: SleepEntry[];
 	onEdit: (id: string) => void;
 	onDelete: (id: string) => void;
+	limit?: number;
 }
 
-export default function SleepLog({ entries, onEdit, onDelete }: SleepLogProps) {
+export default function SleepLog({
+	entries,
+	onEdit,
+	onDelete,
+	limit,
+}: SleepLogProps) {
+	const displayEntries = limit ? entries.slice(0, limit) : entries;
+
+	// Função auxiliar para formatar a data
+	const formatDate = (date: string | Date): string => {
+		if (typeof date === 'string') {
+			return new Date(date).toLocaleDateString();
+		}
+		return date.toLocaleDateString();
+	};
+
 	return (
 		<Table>
 			<TableHeader>
@@ -36,9 +51,9 @@ export default function SleepLog({ entries, onEdit, onDelete }: SleepLogProps) {
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{entries.map((entry) => (
+				{displayEntries.map((entry) => (
 					<TableRow key={entry.id}>
-						<TableCell>{entry.date.toLocaleDateString()}</TableCell>
+						<TableCell>{formatDate(entry.date)}</TableCell>
 						<TableCell>{entry.sleepDuration} hours</TableCell>
 						<TableCell>{entry.mood}</TableCell>
 						<TableCell>{entry.comment}</TableCell>
