@@ -1,6 +1,10 @@
 // app/dashboard/layout.tsx
 import Sidebar from '../components/Sidebar/Sidebar';
+import { Metadata } from 'next';
 
+export const metadata: Metadata = {
+	title: 'Dashboard | Fit Forge',
+};
 export default function DashboardLayout({
 	children,
 }: {
