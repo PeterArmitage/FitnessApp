@@ -32,7 +32,7 @@ export default function Sidebar() {
 	return (
 		<nav className='w-64 h-screen flex flex-col bg-white/10 dark:bg-black/10 backdrop-blur-md border-r border-gray-200 dark:border-white/20'>
 			<div className='p-4 flex justify-between items-center border-b border-gray-200 dark:border-white/20'>
-				<h2 className='text-2xl font-bold'>Fitness App</h2>
+				<h2 className='text-2xl font-bold'>Fit Forge</h2>
 				<ThemeToggle />
 			</div>
 			<ul className='mt-8 flex-grow'>
