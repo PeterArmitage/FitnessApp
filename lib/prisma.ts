@@ -1,20 +1,20 @@
-// lib/prisma.ts
 import { PrismaClient } from '@prisma/client';
 
-// Adicione esta declaração de tipo
+// Declare a global type for prisma, but use a different name
 declare global {
-	var prisma: PrismaClient | undefined;
+	var prismaSingleton: PrismaClient | undefined;
 }
 
+// Use a different name for the local variable
 let prisma: PrismaClient;
 
 if (process.env.NODE_ENV === 'production') {
 	prisma = new PrismaClient();
 } else {
-	if (!global.prisma) {
-		global.prisma = new PrismaClient();
+	if (!global.prismaSingleton) {
+		global.prismaSingleton = new PrismaClient();
 	}
-	prisma = global.prisma;
+	prisma = global.prismaSingleton;
 }
 
 export default prisma;

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import prisma from '@/lib/prisma';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options';
 
 export async function GET() {
 	const session = await getServerSession(authOptions);
@@ -19,12 +19,22 @@ export async function GET() {
 		});
 		console.log('Food entries fetched:', foodEntries.length);
 		return NextResponse.json(foodEntries);
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error('Error fetching food entries:', error);
-		return NextResponse.json(
-			{ error: 'Error fetching food entries', details: error.message },
-			{ status: 500 }
-		);
+		if (error instanceof Error) {
+			return NextResponse.json(
+				{ error: 'Error fetching food entries', details: error.message },
+				{ status: 500 }
+			);
+		} else {
+			return NextResponse.json(
+				{
+					error: 'Error fetching food entries',
+					details: 'An unknown error occurred',
+				},
+				{ status: 500 }
+			);
+		}
 	}
 }
 
@@ -59,11 +69,21 @@ export async function POST(request: Request) {
 		});
 
 		return NextResponse.json(newFoodEntry, { status: 201 });
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error('Error creating food entry:', error);
-		return NextResponse.json(
-			{ error: 'Error creating food entry', details: error.message },
-			{ status: 500 }
-		);
+		if (error instanceof Error) {
+			return NextResponse.json(
+				{ error: 'Error creating food entry', details: error.message },
+				{ status: 500 }
+			);
+		} else {
+			return NextResponse.json(
+				{
+					error: 'Error creating food entry',
+					details: 'An unknown error occurred',
+				},
+				{ status: 500 }
+			);
+		}
 	}
 }
