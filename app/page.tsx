@@ -5,12 +5,14 @@ import { ThemeToggle } from './components/ThemeToggle';
 
 export default function Home() {
 	return (
-		<div className='flex flex-col items-center justify-center min-h-screen'>
+		<div className='flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8'>
 			<div className='absolute top-4 right-4'>
 				<ThemeToggle />
 			</div>
-			<h1 className='text-6xl font-bold mb-8'>Welcome to FitnessApp</h1>
-			<p className='text-xl mb-8 text-center max-w-2xl'>
+			<h1 className='text-4xl sm:text-5xl md:text-6xl font-bold mb-8 text-center'>
+				Welcome to Fit Forge
+			</h1>
+			<p className='text-lg sm:text-xl mb-8 text-center max-w-2xl'>
 				Track your workouts, monitor your diet, and achieve your fitness goals
 				with our comprehensive fitness platform.
 			</p>

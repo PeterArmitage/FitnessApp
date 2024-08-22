@@ -83,67 +83,77 @@ export default function Overview() {
 
 	return (
 		<div className='space-y-6 p-4'>
-			<h1 className='text-3xl font-bold'>Overview</h1>
-			<p className='mt-2'>
+			<h1 className='text-2xl sm:text-3xl font-bold'>Overview</h1>
+			<p className='mt-2 text-sm sm:text-base'>
 				Welcome to your fitness dashboard, {session?.user?.name}!
 			</p>
 
-			<div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-				<Card>
+			<div className='grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6'>
+				<Card className='col-span-1 sm:col-span-2 lg:col-span-1'>
 					<CardHeader>
-						<CardTitle>Calorie Intake</CardTitle>
+						<CardTitle className='text-lg sm:text-xl'>Calorie Intake</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<p className='text-2xl font-bold'>
+						<p className='text-xl sm:text-2xl font-bold'>
 							{calculateAverageCalories()}{' '}
 							{settings.units === 'metric' ? 'kcal' : 'Cal'}
 						</p>
-						<p className='text-sm text-gray-500'>Average daily intake</p>
-						<ResponsiveContainer width='100%' height={200}>
-							<LineChart data={foodEntries.slice(-7)}>
-								<CartesianGrid strokeDasharray='3 3' />
-								<XAxis dataKey='date' />
-								<YAxis />
-								<Tooltip />
-								<Line type='monotone' dataKey='calories' stroke='#8884d8' />
-							</LineChart>
-						</ResponsiveContainer>
+						<p className='text-xs sm:text-sm text-gray-500'>
+							Average daily intake
+						</p>
+						<div className='h-48 sm:h-64 mt-4'>
+							<ResponsiveContainer width='100%' height='100%'>
+								<LineChart data={foodEntries.slice(-7)}>
+									<CartesianGrid strokeDasharray='3 3' />
+									<XAxis dataKey='date' tick={{ fontSize: 12 }} />
+									<YAxis tick={{ fontSize: 12 }} />
+									<Tooltip />
+									<Line type='monotone' dataKey='calories' stroke='#8884d8' />
+								</LineChart>
+							</ResponsiveContainer>
+						</div>
 					</CardContent>
 				</Card>
 
-				<Card>
+				<Card className='col-span-1 sm:col-span-2 lg:col-span-1'>
 					<CardHeader>
-						<CardTitle>Sleep Duration</CardTitle>
+						<CardTitle className='text-lg sm:text-xl'>Sleep Duration</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<p className='text-2xl font-bold'>
+						<p className='text-xl sm:text-2xl font-bold'>
 							{calculateAverageSleepDuration()} hours
 						</p>
-						<p className='text-sm text-gray-500'>Average sleep duration</p>
-						<ResponsiveContainer width='100%' height={200}>
-							<LineChart data={sleepEntries.slice(-7)}>
-								<CartesianGrid strokeDasharray='3 3' />
-								<XAxis dataKey='date' />
-								<YAxis />
-								<Tooltip />
-								<Line
-									type='monotone'
-									dataKey='sleepDuration'
-									stroke='#82ca9d'
-								/>
-							</LineChart>
-						</ResponsiveContainer>
+						<p className='text-xs sm:text-sm text-gray-500'>
+							Average sleep duration
+						</p>
+						<div className='h-48 sm:h-64 mt-4'>
+							<ResponsiveContainer width='100%' height='100%'>
+								<LineChart data={sleepEntries.slice(-7)}>
+									<CartesianGrid strokeDasharray='3 3' />
+									<XAxis dataKey='date' tick={{ fontSize: 12 }} />
+									<YAxis tick={{ fontSize: 12 }} />
+									<Tooltip />
+									<Line
+										type='monotone'
+										dataKey='sleepDuration'
+										stroke='#82ca9d'
+									/>
+								</LineChart>
+							</ResponsiveContainer>
+						</div>
 					</CardContent>
 				</Card>
 
 				<Card>
 					<CardHeader>
-						<CardTitle>Recent Workouts</CardTitle>
+						<CardTitle className='text-lg sm:text-xl'>
+							Recent Workouts
+						</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<ul className='space-y-2'>
+						<ul className='space-y-2 text-xs sm:text-sm'>
 							{getRecentWorkouts().map((workout, index) => (
-								<li key={index} className='text-sm'>
+								<li key={index}>
 									{new Date(workout.date).toLocaleDateString()}:{' '}
 									{workout.exercises.length} exercises
 								</li>
@@ -154,10 +164,10 @@ export default function Overview() {
 
 				<Card>
 					<CardHeader>
-						<CardTitle>Quick Links</CardTitle>
+						<CardTitle className='text-lg sm:text-xl'>Quick Links</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<ul className='space-y-2'>
+						<ul className='space-y-2 text-xs sm:text-sm'>
 							<li>
 								<a
 									href='/dashboard/food'
