@@ -26,11 +26,9 @@ export default function InfoCard({
 	const [imageError, setImageError] = useState(false);
 
 	return (
-		<Card className='overflow-hidden bg-gradient from-blue-500 to-purple-600  dark:bg-gradient-dark dark:from-gray-900 dark:to-purple-900 border border-gray-200 dark:border-gray-700'>
+		<Card className='overflow-hidden bg-gradient-to-br from-blue-500 to-purple-600 dark:from-gray-900 dark:to-purple-900 border border-gray-200 dark:border-gray-700'>
 			<CardHeader>
-				<CardTitle className='text-gray-900 dark:text-gray-100'>
-					{title}
-				</CardTitle>
+				<CardTitle className='text-white'>{title}</CardTitle>
 			</CardHeader>
 			<CardContent>
 				{!imageError ? (
@@ -50,14 +48,14 @@ export default function InfoCard({
 						Image not available
 					</div>
 				)}
-				<CardDescription className='mt-4 text-gray-600 dark:text-gray-300'>
+				<CardDescription className='mt-4 text-white'>
 					{description}
 				</CardDescription>
 			</CardContent>
 			<CardFooter>
 				<Button
 					onClick={() => window.open(link, '_blank')}
-					className='bg-blue-500 hover:bg-blue-600 text-white dark:bg-blue-600 dark:hover:bg-blue-700'
+					className='bg-white text-blue-500 hover:bg-gray-100 dark:bg-gray-800 dark:text-purple-400 dark:hover:bg-gray-700'
 				>
 					Learn More
 				</Button>

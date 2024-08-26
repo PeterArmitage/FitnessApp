@@ -61,6 +61,12 @@ const ChartComponent = ({
 					font: {
 						size: 10,
 					},
+					ticks: {
+						color: 'rgba(255, 255, 255, 0.8)',
+					},
+					grid: {
+						color: 'rgba(255, 255, 255, 0.1)',
+					},
 				},
 			},
 			x: {
@@ -227,7 +233,7 @@ function CalorieIntakeCard({
 	if (isLoading) return <CardSkeleton />;
 
 	return (
-		<Card className='w-full'>
+		<Card className='w-full bg-gradient-to-br from-blue-500 to-purple-600 dark:from-gray-900 dark:to-purple-900'>
 			<CardHeader className='p-4 sm:p-6'>
 				<CardTitle className='text-lg sm:text-xl'>Calorie Intake</CardTitle>
 			</CardHeader>
@@ -268,7 +274,7 @@ function SleepDurationCard({
 	if (isLoading) return <CardSkeleton />;
 
 	return (
-		<Card className='w-full'>
+		<Card className='w-full bg-gradient-to-br from-blue-500 to-purple-600 dark:from-gray-900 dark:to-purple-900'>
 			<CardHeader className='p-4 sm:p-6'>
 				<CardTitle className='text-lg sm:text-xl'>Sleep Duration</CardTitle>
 			</CardHeader>
@@ -301,7 +307,7 @@ interface RecentWorkoutsCardProps {
 
 function RecentWorkoutsCard({ workouts }: RecentWorkoutsCardProps) {
 	return (
-		<Card className='w-full'>
+		<Card className='w-full bg-gradient-to-br from-blue-500 to-purple-600 dark:from-gray-900 dark:to-purple-900'>
 			<CardHeader className='p-4 sm:p-6'>
 				<CardTitle className='text-lg sm:text-xl'>Recent Workouts</CardTitle>
 			</CardHeader>
@@ -320,7 +326,7 @@ function RecentWorkoutsCard({ workouts }: RecentWorkoutsCardProps) {
 }
 function QuickLinksCard() {
 	return (
-		<Card className='w-full'>
+		<Card className='w-full bg-gradient-to-br from-blue-500 to-purple-600 dark:from-gray-900 dark:to-purple-900'>
 			<CardHeader className='p-4 sm:p-6'>
 				<CardTitle className='text-lg sm:text-xl'>Quick Links</CardTitle>
 			</CardHeader>
