@@ -26,7 +26,7 @@ export default function InfoCard({
 	const [imageError, setImageError] = useState(false);
 
 	return (
-		<Card className='overflow-hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700'>
+		<Card className='overflow-hidden bg-gradient-light dark:bg-gradient-dark border border-gray-200 dark:border-gray-700'>
 			<CardHeader>
 				<CardTitle className='text-gray-900 dark:text-gray-100'>
 					{title}
