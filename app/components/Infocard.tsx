@@ -1,4 +1,3 @@
-// components/InfoCard.tsx
 import {
 	Card,
 	CardContent,

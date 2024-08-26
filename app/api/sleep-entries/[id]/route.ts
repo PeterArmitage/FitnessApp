@@ -16,7 +16,6 @@ export async function DELETE(
 	const id = params.id;
 
 	try {
-		// First, check if the sleep entry belongs to the authenticated user
 		const sleepEntry = await prisma.sleepEntry.findUnique({
 			where: { id },
 		});
@@ -28,7 +27,6 @@ export async function DELETE(
 			);
 		}
 
-		// If the entry belongs to the user, proceed with deletion
 		await prisma.sleepEntry.delete({
 			where: { id },
 		});

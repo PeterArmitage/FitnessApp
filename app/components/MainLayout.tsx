@@ -1,4 +1,3 @@
-// components/MainLayout.tsx
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from './ThemeToggle';
@@ -6,17 +5,21 @@ import { ThemeToggle } from './ThemeToggle';
 interface MainLayoutProps {
 	children: React.ReactNode;
 	showAuthButtons?: boolean;
+	showThemeToggle?: boolean;
 }
 
 export function MainLayout({
 	children,
 	showAuthButtons = true,
+	showThemeToggle = true,
 }: MainLayoutProps) {
 	return (
 		<div className='flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8'>
-			<div className='absolute top-4 right-4'>
-				<ThemeToggle />
-			</div>
+			{showThemeToggle && ( // Conditionally render the ThemeToggle
+				<div className='absolute top-4 right-4'>
+					<ThemeToggle />
+				</div>
+			)}
 			{children}
 			{showAuthButtons && (
 				<div className='space-x-4 mt-8'>

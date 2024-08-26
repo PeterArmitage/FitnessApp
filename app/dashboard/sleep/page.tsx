@@ -34,6 +34,7 @@ interface SleepEntry {
 export default function SleepAndRecovery() {
 	const [entries, setEntries] = useState<SleepEntry[]>([]);
 	const [searchTerm, setSearchTerm] = useState('');
+	const [editingEntry, setEditingEntry] = useState<SleepEntry | null>(null);
 	const router = useRouter();
 
 	useEffect(() => {
@@ -61,20 +62,34 @@ export default function SleepAndRecovery() {
 		});
 
 		if (response.ok) {
-			fetchEntries(); // Atualiza a lista após adicionar uma nova entrada
+			fetchEntries();
 		}
 	};
 	const handleEdit = (id: string) => {
-		// TODO: Implement edit functionality
+		const entryToEdit = entries.find((entry) => entry.id === id);
+		if (entryToEdit) {
+			setEditingEntry(entryToEdit);
+		}
 	};
+	const handleUpdate = async (updatedEntry: SleepEntry) => {
+		const response = await fetch(`/api/sleep-entries/${updatedEntry.id}`, {
+			method: 'PUT',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(updatedEntry),
+		});
 
+		if (response.ok) {
+			setEditingEntry(null);
+			fetchEntries();
+		}
+	};
 	const handleDelete = async (id: string) => {
 		const response = await fetch(`/api/sleep-entries/${id}`, {
 			method: 'DELETE',
 		});
 
 		if (response.ok) {
-			fetchEntries(); // Atualiza a lista após excluir uma entrada
+			fetchEntries();
 		}
 	};
 
@@ -89,30 +104,39 @@ export default function SleepAndRecovery() {
 	);
 
 	return (
-		<>
-			<h1 className='text-3xl font-bold mb-6'>Sleep and Recovery</h1>
+		<div className='flex flex-col space-y-6'>
+			<h1 className='text-3xl font-bold'>Sleep and Recovery</h1>
 
 			<div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
 				<div>
 					<h2 className='text-2xl font-semibold mb-4'>Log Sleep</h2>
-					<SleepEntry onSubmit={handleNewEntry} />
+					<SleepEntry
+						onSubmit={(entry) => {
+							if (entry.id) {
+								handleUpdate(entry as SleepEntry);
+							} else {
+								handleNewEntry(entry);
+							}
+						}}
+						initialData={editingEntry}
+					/>
 				</div>
 				<div>
 					<h2 className='text-2xl font-semibold mb-4'>
 						Sleep Log (Last 3 Days)
 					</h2>
 					<SleepLog
-						entries={entries}
+						entries={entries.slice(-3)}
 						onEdit={handleEdit}
 						onDelete={handleDelete}
 					/>
-					<Button onClick={handleViewAllLogs} className='mt-4'>
+					<Button onClick={handleViewAllLogs} className='mt-4 w-full'>
 						View All Logs
 					</Button>
 				</div>
 			</div>
 
-			<div className='mt-12'>
+			<div>
 				<h2 className='text-2xl font-semibold mb-4'>
 					Sleep and Recovery Resources
 				</h2>
@@ -123,12 +147,12 @@ export default function SleepAndRecovery() {
 					onChange={(e) => setSearchTerm(e.target.value)}
 					className='mb-4'
 				/>
-				<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+				<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
 					{filteredCards.map((card, index) => (
 						<InfoCard key={index} {...card} />
 					))}
 				</div>
 			</div>
-		</>
+		</div>
 	);
 }

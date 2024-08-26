@@ -13,7 +13,6 @@ export async function POST(req: Request) {
 		const body = await req.json();
 		const { name, calories, weight, weightUnit } = body;
 
-		// Log the received data
 		console.log('Received data:', body);
 
 		// Validate the required fields

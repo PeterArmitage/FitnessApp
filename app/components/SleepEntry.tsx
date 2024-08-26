@@ -1,5 +1,5 @@
 // components/SleepEntry.tsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Calendar } from '@/components/ui/calendar';
 import {
 	Select,
@@ -19,31 +19,55 @@ const moodOptions = [
 	{ value: 'bad', label: 'Bad', icon: '😕' },
 	{ value: 'terrible', label: 'Terrible', icon: '😢' },
 ];
-
-interface SleepEntryProps {
-	onSubmit: (entry: {
-		date: Date;
-		sleepDuration: number;
-		mood: string;
-		comment: string;
-	}) => void;
+interface SleepEntryData {
+	date: Date;
+	sleepDuration: number;
+	mood: string;
+	comment: string;
 }
 
-export default function SleepEntry({ onSubmit }: SleepEntryProps) {
+interface SleepEntryProps {
+	onSubmit: (entry: SleepEntryData & { id?: string }) => void;
+	initialData?: (SleepEntryData & { id: string }) | null;
+}
+
+export default function SleepEntry({ onSubmit, initialData }: SleepEntryProps) {
 	const [date, setDate] = useState<Date>(new Date());
 	const [sleepDuration, setSleepDuration] = useState<number>(0);
 	const [mood, setMood] = useState('');
 	const [comment, setComment] = useState('');
 
+	useEffect(() => {
+		if (initialData) {
+			setDate(new Date(initialData.date));
+			setSleepDuration(initialData.sleepDuration);
+			setMood(initialData.mood);
+			setComment(initialData.comment);
+		}
+	}, [initialData]);
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		if (date) {
-			onSubmit({ date, sleepDuration, mood, comment });
-			// Reset form fields
-			setDate(new Date());
-			setSleepDuration(0);
-			setMood('');
-			setComment('');
+			const entryData: SleepEntryData & { id?: string } = {
+				date,
+				sleepDuration,
+				mood,
+				comment,
+			};
+
+			if (initialData) {
+				entryData.id = initialData.id;
+			}
+
+			onSubmit(entryData);
+
+			// Reset form fields if it's not an edit
+			if (!initialData) {
+				setDate(new Date());
+				setSleepDuration(0);
+				setMood('');
+				setComment('');
+			}
 		}
 	};
 
@@ -78,7 +102,9 @@ export default function SleepEntry({ onSubmit }: SleepEntryProps) {
 				value={comment}
 				onChange={(e) => setComment(e.target.value)}
 			/>
-			<Button type='submit'>Log Sleep</Button>
+			<Button type='submit'>
+				{initialData ? 'Update Sleep' : 'Log Sleep'}
+			</Button>
 		</form>
 	);
 }

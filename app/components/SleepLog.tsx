@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 
 interface SleepEntry {
 	id: string;
-	date: string | Date; // Alterado para aceitar string ou Date
+	date: string | Date;
 	sleepDuration: number;
 	mood: string;
 	comment: string;
@@ -31,7 +31,6 @@ export default function SleepLog({
 }: SleepLogProps) {
 	const displayEntries = limit ? entries.slice(0, limit) : entries;
 
-	// Função auxiliar para formatar a data
 	const formatDate = (date: string | Date): string => {
 		if (typeof date === 'string') {
 			return new Date(date).toLocaleDateString();
@@ -40,32 +39,71 @@ export default function SleepLog({
 	};
 
 	return (
-		<Table>
-			<TableHeader>
-				<TableRow>
-					<TableHead>Date</TableHead>
-					<TableHead>Sleep Duration</TableHead>
-					<TableHead>Mood</TableHead>
-					<TableHead>Comment</TableHead>
-					<TableHead>Actions</TableHead>
-				</TableRow>
-			</TableHeader>
-			<TableBody>
-				{displayEntries.map((entry) => (
-					<TableRow key={entry.id}>
-						<TableCell>{formatDate(entry.date)}</TableCell>
-						<TableCell>{entry.sleepDuration} hours</TableCell>
-						<TableCell>{entry.mood}</TableCell>
-						<TableCell>{entry.comment}</TableCell>
-						<TableCell>
-							<Button onClick={() => onEdit(entry.id)}>Edit</Button>
-							<Button onClick={() => onDelete(entry.id)} variant='destructive'>
-								Delete
-							</Button>
-						</TableCell>
+		<div className='overflow-x-auto'>
+			<Table>
+				<TableHeader>
+					<TableRow>
+						<TableHead>Date</TableHead>
+						<TableHead>Sleep Duration</TableHead>
+						<TableHead>Mood</TableHead>
+						<TableHead className='hidden md:table-cell'>Comment</TableHead>
+						<TableHead className='hidden md:table-cell'>Actions</TableHead>
 					</TableRow>
-				))}
-			</TableBody>
-		</Table>
+				</TableHeader>
+				<TableBody>
+					{displayEntries.map((entry) => (
+						<>
+							<TableRow key={entry.id}>
+								<TableCell>{formatDate(entry.date)}</TableCell>
+								<TableCell>{entry.sleepDuration} hours</TableCell>
+								<TableCell>{entry.mood}</TableCell>
+								<TableCell className='hidden md:table-cell'>
+									{entry.comment}
+								</TableCell>
+								<TableCell className='hidden md:table-cell'>
+									<Button
+										onClick={() => onEdit(entry.id)}
+										variant='outline'
+										size='sm'
+										className='mr-2'
+									>
+										Edit
+									</Button>
+									<Button
+										onClick={() => onDelete(entry.id)}
+										variant='destructive'
+										size='sm'
+									>
+										Delete
+									</Button>
+								</TableCell>
+							</TableRow>
+							<TableRow className='md:hidden'>
+								<TableCell colSpan={3} className='p-2'>
+									<div className='flex justify-between'>
+										<Button
+											onClick={() => onEdit(entry.id)}
+											variant='outline'
+											size='sm'
+											className='w-[48%]'
+										>
+											Edit
+										</Button>
+										<Button
+											onClick={() => onDelete(entry.id)}
+											variant='destructive'
+											size='sm'
+											className='w-[48%]'
+										>
+											Delete
+										</Button>
+									</div>
+								</TableCell>
+							</TableRow>
+						</>
+					))}
+				</TableBody>
+			</Table>
+		</div>
 	);
 }

@@ -1,7 +1,6 @@
 import NextAuth from 'next-auth';
 import { authOptions } from './auth-options';
 
-// Extend the built-in session type to include id
 declare module 'next-auth' {
 	interface Session {
 		user: {

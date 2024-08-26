@@ -57,6 +57,27 @@ const ChartComponent = ({
 		scales: {
 			y: {
 				beginAtZero: true,
+				ticks: {
+					font: {
+						size: 10,
+					},
+				},
+			},
+			x: {
+				ticks: {
+					font: {
+						size: 10,
+					},
+				},
+			},
+		},
+		plugins: {
+			legend: {
+				labels: {
+					font: {
+						size: 12,
+					},
+				},
 			},
 		},
 	};
@@ -80,7 +101,6 @@ interface SleepEntry {
 interface Exercise {
 	id: string;
 	name: string;
-	// Add other exercise properties as needed
 }
 
 interface Workout {
@@ -95,7 +115,6 @@ interface CompletedWorkout {
 
 interface UserSettings {
 	units: 'metric' | 'imperial';
-	// Add other settings properties as needed
 }
 
 // API fetch functions
@@ -153,14 +172,14 @@ export default function Overview() {
 	};
 
 	return (
-		<MainLayout showAuthButtons={false}>
-			<div className='space-y-6 p-4'>
-				<h1 className='text-2xl sm:text-3xl font-bold'>Overview</h1>
+		<MainLayout showAuthButtons={false} showThemeToggle={false}>
+			<div className='flex flex-col space-y-4 p-4 sm:p-6'>
+				<h1 className='text-xl sm:text-2xl md:text-3xl font-bold'>Overview</h1>
 				<p className='mt-2 text-sm sm:text-base'>
 					Welcome to your fitness dashboard, {session?.user?.name}!
 				</p>
 
-				<div className='grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6'>
+				<div className='flex flex-col sm:grid sm:grid-cols-2 gap-4 sm:gap-6'>
 					<Suspense fallback={<CardSkeleton />}>
 						<CalorieIntakeCard
 							averageCalories={calculateAverageCalories()}
@@ -208,16 +227,20 @@ function CalorieIntakeCard({
 	if (isLoading) return <CardSkeleton />;
 
 	return (
-		<Card className='col-span-1 sm:col-span-2 lg:col-span-1'>
-			<CardHeader>
+		<Card className='w-full'>
+			<CardHeader className='p-4 sm:p-6'>
 				<CardTitle className='text-lg sm:text-xl'>Calorie Intake</CardTitle>
 			</CardHeader>
-			<CardContent>
-				<p className='text-xl sm:text-2xl font-bold'>
-					{averageCalories} {units === 'metric' ? 'kcal' : 'Cal'}
-				</p>
-				<p className='text-xs sm:text-sm text-gray-500'>Average daily intake</p>
-				<div className='h-48 sm:h-64 mt-4'>
+			<CardContent className='p-4 sm:p-6'>
+				<div className='flex items-baseline'>
+					<p className='text-xl sm:text-2xl font-bold'>
+						{averageCalories} {units === 'metric' ? 'kcal' : 'Cal'}
+					</p>
+					<p className='ml-2 text-xs sm:text-sm text-gray-500'>
+						Average daily intake
+					</p>
+				</div>
+				<div className='h-40 sm:h-48 md:h-64 mt-4'>
 					<Suspense fallback={<ChartSkeleton />}>
 						<ChartComponent
 							data={foodEntries.slice(-7)}
@@ -245,18 +268,20 @@ function SleepDurationCard({
 	if (isLoading) return <CardSkeleton />;
 
 	return (
-		<Card className='col-span-1 sm:col-span-2 lg:col-span-1'>
-			<CardHeader>
+		<Card className='w-full'>
+			<CardHeader className='p-4 sm:p-6'>
 				<CardTitle className='text-lg sm:text-xl'>Sleep Duration</CardTitle>
 			</CardHeader>
-			<CardContent>
-				<p className='text-xl sm:text-2xl font-bold'>
-					{averageSleepDuration} hours
-				</p>
-				<p className='text-xs sm:text-sm text-gray-500'>
-					Average sleep duration
-				</p>
-				<div className='h-48 sm:h-64 mt-4'>
+			<CardContent className='p-4 sm:p-6'>
+				<div className='flex items-baseline'>
+					<p className='text-xl sm:text-2xl font-bold'>
+						{averageSleepDuration} hours
+					</p>
+					<p className='ml-2 text-xs sm:text-sm text-gray-500'>
+						Average sleep duration
+					</p>
+				</div>
+				<div className='h-40 sm:h-48 md:h-64 mt-4'>
 					<Suspense fallback={<ChartSkeleton />}>
 						<ChartComponent
 							data={sleepEntries.slice(-7)}
@@ -276,11 +301,11 @@ interface RecentWorkoutsCardProps {
 
 function RecentWorkoutsCard({ workouts }: RecentWorkoutsCardProps) {
 	return (
-		<Card>
-			<CardHeader>
+		<Card className='w-full'>
+			<CardHeader className='p-4 sm:p-6'>
 				<CardTitle className='text-lg sm:text-xl'>Recent Workouts</CardTitle>
 			</CardHeader>
-			<CardContent>
+			<CardContent className='p-4 sm:p-6'>
 				<ul className='space-y-2 text-xs sm:text-sm'>
 					{workouts.map((workout, index) => (
 						<li key={index}>
@@ -295,11 +320,11 @@ function RecentWorkoutsCard({ workouts }: RecentWorkoutsCardProps) {
 }
 function QuickLinksCard() {
 	return (
-		<Card>
-			<CardHeader>
+		<Card className='w-full'>
+			<CardHeader className='p-4 sm:p-6'>
 				<CardTitle className='text-lg sm:text-xl'>Quick Links</CardTitle>
 			</CardHeader>
-			<CardContent>
+			<CardContent className='p-4 sm:p-6'>
 				<ul className='space-y-2 text-xs sm:text-sm'>
 					<li>
 						<a href='/dashboard/food' className='text-blue-500 hover:underline'>

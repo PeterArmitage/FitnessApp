@@ -26,6 +26,10 @@ const config = {
 				foreground: 'hsl(var(--foreground))',
 				'app-text-light': '#000000',
 				'app-text-dark': '#ffffff',
+				'gradient-light-from': 'var(--gradient-light-from)',
+				'gradient-light-to': 'var(--gradient-light-to)',
+				'gradient-dark-from': 'var(--gradient-dark-from)',
+				'gradient-dark-to': 'var(--gradient-dark-to)',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))',
